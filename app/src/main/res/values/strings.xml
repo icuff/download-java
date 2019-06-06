@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">DownloadJava</string>
+    <string name="download_btn">Download</string>
+</resources>
