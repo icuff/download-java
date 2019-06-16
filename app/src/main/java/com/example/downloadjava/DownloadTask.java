@@ -14,12 +14,14 @@ import java.net.URL;
 
 public class DownloadTask extends AsyncTask<String, Void, Boolean> {
     private WeakReference<Context> weakContext;
+    private long begin;
 
     public DownloadTask(WeakReference<Context> context) {
         this.weakContext = context;
     }
 
     protected Boolean doInBackground(String... urls) {
+        begin = System.nanoTime();
         try {
             URL u = new URL("https://devdactic.com/html/5-simple-hacks-LBT.pdf");
             HttpURLConnection c = (HttpURLConnection) u.openConnection();
@@ -28,7 +30,7 @@ public class DownloadTask extends AsyncTask<String, Void, Boolean> {
             c.connect();
 
             File sdCard = Environment.getExternalStorageDirectory();// storage/emulated/0
-            File file = new File(sdCard, "/Download/fromJava.pdf");
+            File file = new File(sdCard, "/Download/downloadJava.pdf");
             FileOutputStream f = new FileOutputStream(file);
 
             InputStream in = c.getInputStream();
@@ -48,8 +50,12 @@ public class DownloadTask extends AsyncTask<String, Void, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        String message = result ? "Success" : "Fail";
+        String resultMsg = result ? "Success" : "Fail";
         Integer duration = Toast.LENGTH_SHORT;
+
+        long difference = (System.nanoTime() - begin)/1000000;
+
+        String message = resultMsg + " in " + difference + "ms";
 
         Toast toast = Toast.makeText(this.weakContext.get(), message, duration);
         toast.show();
